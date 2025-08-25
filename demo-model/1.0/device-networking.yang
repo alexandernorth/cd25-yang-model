@@ -21,12 +21,6 @@ module device-networking {
     description
       "Top-level container holding all interfaces and services.";
 
-    /* At least one interface must be admin-up */
-    must "boolean(./interface[admin-up = 'true'])" {
-      error-message
-        "At least one interface must be admin-up.";
-    }
-
     list interface {
       key "name";
       description
