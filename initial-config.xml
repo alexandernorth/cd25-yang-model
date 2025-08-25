@@ -1,0 +1,24 @@
+<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <interfaces xmlns="urn:demo:simple">
+    <interface>
+      <name>eth0</name>
+      <type>ethernet</type>
+      <admin-up>true</admin-up>
+      <speed>10G</speed>
+      <ipv4-enabled>true</ipv4-enabled>
+      <ipv4-address>192.0.2.10</ipv4-address>
+    </interface>
+
+    <interface>
+      <name>lo0</name>
+      <type>loopback</type>
+      <admin-up>true</admin-up>
+    </interface>
+
+    <service>
+      <name>svc-a</name>
+      <if-name>eth0</if-name>
+      <bandwidth>5000</bandwidth>
+    </service>
+  </interfaces>
+</config>
