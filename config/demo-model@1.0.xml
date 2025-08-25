@@ -1,5 +1,5 @@
 <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <interfaces xmlns="urn:demo:interfaces">
+  <network xmlns="urn:demo:device-networking">
     <interface>
       <name>eth0</name>
       <type>ethernet</type>
@@ -20,5 +20,5 @@
       <if-name>eth0</if-name>
       <bandwidth>5000</bandwidth>
     </service>
-  </interfaces>
+  </network>
 </config>

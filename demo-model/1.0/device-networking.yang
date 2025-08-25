@@ -1,8 +1,7 @@
-
-module interfaces {
+module device-networking {
   yang-version 1.1;
-  namespace "urn:demo:interfaces";
-  prefix dint;
+  namespace "urn:demo:device-networking";
+  prefix dn;
 
   import ietf-inet-types {
     prefix inet;
@@ -18,7 +17,7 @@ module interfaces {
       "Initial simple demo.";
   }
 
-  container interfaces {
+  container network {
     description
       "Top-level container holding all interfaces and services.";
 
@@ -83,10 +82,10 @@ module interfaces {
 
       must " not(./type = 'ethernet') or
     ( (./speed = '1G'  and
-         sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 1000)
+         sum(/dn:interfaces/dn:service[dn:if-name = current()/dn:name]/dn:bandwidth) <= 1000)
       or
       (./speed = '10G' and
-         sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 10000) )" {
+         sum(/dn:interfaces/dn:service[dn:if-name = current()/dn:name]/dn:bandwidth) <= 10000) )" {
         error-message
           "Total service bandwidth on this interface exceeds its capacity.";
       }
@@ -103,7 +102,7 @@ module interfaces {
 
       leaf if-name {
         type leafref {
-          path "/dint:interfaces/dint:interface/dint:name";
+          path "/dn:interfaces/dn:interface/dn:name";
         }
         mandatory true;
       }
