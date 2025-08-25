@@ -82,10 +82,10 @@ module device-networking {
 
       must " not(./type = 'ethernet') or
     ( (./speed = '1G'  and
-         sum(/dn:interfaces/dn:service[dn:if-name = current()/dn:name]/dn:bandwidth) <= 1000)
+         sum(/dn:network/dn:service[dn:if-name = current()/dn:name]/dn:bandwidth) <= 1000)
       or
       (./speed = '10G' and
-         sum(/dn:interfaces/dn:service[dn:if-name = current()/dn:name]/dn:bandwidth) <= 10000) )" {
+         sum(/dn:network/dn:service[dn:if-name = current()/dn:name]/dn:bandwidth) <= 10000) )" {
         error-message
           "Total service bandwidth on this interface exceeds its capacity.";
       }
@@ -102,7 +102,7 @@ module device-networking {
 
       leaf if-name {
         type leafref {
-          path "/dn:interfaces/dn:interface/dn:name";
+          path "/dn:network/dn:interface/dn:name";
         }
         mandatory true;
       }
