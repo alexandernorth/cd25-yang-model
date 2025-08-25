@@ -84,9 +84,9 @@ module interfaces {
       /* Check total service bandwidth against capacity */
       must " (../type = 'loopback') or
           (../speed = '1G'  and
-             sum(/d:interfaces/d:service[d:if-name = current()/d:name]/d:bandwidth) <= 1000) or
+             sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 1000) or
           (../speed = '10G' and
-             sum(/d:interfaces/d:service[d:if-name = current()/d:name]/d:bandwidth) <= 10000)" {
+             sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 10000)" {
         error-message
           "Total service bandwidth on this interface exceeds its capacity.";
         description
@@ -105,7 +105,7 @@ module interfaces {
 
       leaf if-name {
         type leafref {
-          path "/d:interfaces/d:interface/d:name";
+          path "/dint:interfaces/dint:interface/dint:name";
         }
         mandatory true;
       }
