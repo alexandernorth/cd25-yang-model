@@ -1,5 +1,5 @@
 <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <interfaces xmlns="urn:demo:simple">
+  <interfaces xmlns="urn:demo:interfaces">
     <interface>
       <name>eth0</name>
       <type>ethernet</type>
