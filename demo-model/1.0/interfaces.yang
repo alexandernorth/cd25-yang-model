@@ -81,16 +81,14 @@ module interfaces {
           "Enable IPv4 only if at least one IPv4 address is configured.";
       }
 
-      /* Check total service bandwidth against capacity */
-      must " (../type = 'loopback') or
-          (../speed = '1G'  and
-             sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 1000) or
-          (../speed = '10G' and
-             sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 10000)" {
+      must " not(./type = 'ethernet') or
+    ( (./speed = '1G'  and
+         sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 1000)
+      or
+      (./speed = '10G' and
+         sum(/dint:interfaces/dint:service[dint:if-name = current()/dint:name]/dint:bandwidth) <= 10000) )" {
         error-message
           "Total service bandwidth on this interface exceeds its capacity.";
-        description
-          "Uses current() + sum() to gather all services bound to this interface.";
       }
     }
 
