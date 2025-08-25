@@ -1,0 +1,126 @@
+
+module interfaces {
+  yang-version 1.1;
+  namespace "urn:demo:interfaces";
+  prefix dint;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization
+    "kubenet";
+  description
+    "Small demo model with a few clear must validations.";
+
+  revision "2025-08-25" {
+    description
+      "Initial simple demo.";
+  }
+
+  container interfaces {
+    description
+      "Top-level container holding all interfaces and services.";
+
+    /* At least one interface must be admin-up */
+    must "boolean(./interface[admin-up = 'true'])" {
+      error-message
+        "At least one interface must be admin-up.";
+    }
+
+    list interface {
+      key "name";
+      description
+        "Interface list.";
+
+      leaf name {
+        type string;
+      }
+
+      leaf type {
+        type enumeration {
+          enum ethernet;
+          enum loopback;
+        }
+        mandatory true;
+      }
+
+      leaf admin-up {
+        type boolean;
+        default "false";
+      }
+
+      leaf speed {
+        type enumeration {
+          enum "1G";
+          enum "10G";
+        }
+        description
+          "Only meaningful for ethernet.";
+        /* If ethernet, speed must be set */
+        must "not(../type = 'ethernet') or boolean(.)" {
+          error-message
+            "Ethernet interfaces must have a speed set.";
+        }
+      }
+
+      leaf ipv4-enabled {
+        type boolean;
+        default "false";
+      }
+
+      leaf-list ipv4-address {
+        type inet:ipv4-address;
+        description
+          "IPv4 addresses on the interface.";
+      }
+
+      /* If IPv4 enabled, require at least one address */
+      must "not(./ipv4-enabled = 'true') or count(./ipv4-address) >= 1" {
+        error-message
+          "Enable IPv4 only if at least one IPv4 address is configured.";
+      }
+
+      /* Check total service bandwidth against capacity */
+      must " (../type = 'loopback') or
+          (../speed = '1G'  and
+             sum(/d:interfaces/d:service[d:if-name = current()/d:name]/d:bandwidth) <= 1000) or
+          (../speed = '10G' and
+             sum(/d:interfaces/d:service[d:if-name = current()/d:name]/d:bandwidth) <= 10000)" {
+        error-message
+          "Total service bandwidth on this interface exceeds its capacity.";
+        description
+          "Uses current() + sum() to gather all services bound to this interface.";
+      }
+    }
+
+    list service {
+      key "name";
+      description
+        "Service that binds to an interface and reserves bandwidth.";
+
+      leaf name {
+        type string;
+      }
+
+      leaf if-name {
+        type leafref {
+          path "/d:interfaces/d:interface/d:name";
+        }
+        mandatory true;
+      }
+
+      leaf bandwidth {
+        type uint32;
+        units "Mbps";
+        mandatory true;
+      }
+
+      /* Bound interface must be admin-up */
+      must "deref(./if-name)/../admin-up = 'true'" {
+        error-message
+          "The bound interface must be admin-up.";
+      }
+    }
+  }
+}
