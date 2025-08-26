@@ -69,7 +69,7 @@ module device-networking {
       }
 
       /* If IPv4 enabled, require at least one address */
-      must "not(./ipv4-enabled = 'true') or count(./ipv4-address) >= 1" {
+      must "not((./ipv4-enabled = 'true') and (count(./ipv4-address) = 0))" {
         error-message
           "Enable IPv4 only if at least one IPv4 address is configured.";
       }
