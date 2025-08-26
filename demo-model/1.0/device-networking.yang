@@ -106,12 +106,6 @@ module device-networking {
         units "Mbps";
         mandatory true;
       }
-
-      /* Bound interface must be admin-up */
-      must "deref(./if-name)/../admin-up = 'true'" {
-        error-message
-          "The bound interface must be admin-up.";
-      }
     }
   }
 }
